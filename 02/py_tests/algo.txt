@@ -1,0 +1,5 @@
+1) Pick a random point $x$.
+2) Set $A$ to be the furthest point in the graph from $x$.
+3) Set $B$ to be the furthest point in the graph from $A$.
+4) Identify all paths from $A-B$.
+5) Return node(s) that appear in all the paths from $A-B$.

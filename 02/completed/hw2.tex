@@ -1,0 +1,381 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.2in]{geometry}
+\usepackage{amsmath}
+\usepackage[boxed]{algorithm2e}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tikz,graphics,color,fullpage,float,epsf,caption,subcaption}
+
+\title{CS3510-A: Design and Analysis of Algorithms, Spring 2021} 
+
+\author{Homework-2}
+
+\begin{document}
+% \maketitle
+\begin{center}
+    
+    \LARGE CS3510-A: Design and Analysis of Algorithms, Spring 2021 \\ \vspace{1em} 
+    \large Homework-2 \\ \vspace{0.5em}
+    January 26, 2021
+\end{center}
+\thispagestyle{empty}
+\pagestyle{empty}
+
+\noindent
+\begin{center}
+{\bf DUE DATE: Tuesday, February 2, 1l:59pm}
+\end{center}
+
+\noindent
+{\bf Note-1:} Your homework solutions should be electronically formatted as a single PDF document that you will upload on Gradescope. 
+If you have to include some handwritten parts, please make sure that they are very clearly written and that you include them as high resolution images. \\
+
+\noindent
+{\bf Note-2:} Please think twice before you copy a solution from another student or resource (book, web site, etc). 
+It is not worth the risk and embarrassment. \\
+
+\noindent
+{\bf Note-3:} You need to {\bf explain/justify} your answers. Do not expect full credit if you just state the correct answer. \\
+
+\noindent
+{\bf Note-4: You will get 2 extra points if you submit electronically typed solutions instead of hand-written.} 
+
+\newpage
+\section*{Problem-1 (30 points)}
+You are planning the seating arrangement for a wedding. You are given the list of guests, $V$, and a lookup-table $T$ where $T[v]$ for $v\in V$ is a list of guests that $v$ knows. If $u$ knows $v$, then $v$ also knows $u$. You are required to arrange the seating such that any guest at a dining table knows every other guest sitting at the same dining table either directly or through some other guests sitting at the same dining table. For example, if $x$ knows $y$ and $y$ knows $z$ and $z$ knows $w$, then $x, y, z, w$ can sit at the same dining table. Describe an efficient algorithm that takes as input the set $V$ and lookup-table $T$ and returns the minimum number of dining tables needed to achieve a valid seating. You can assume a check in the lookup-table is an $O(1)$ operation. \\
+
+\noindent
+\textbf{Note 1:} Please provide a detailed description of your solution in plain English or in pseudocode. Also, explain the time complexity and correctness of the prescribed algorithm.\\ \\
+\textbf{Note 2:} You are also allowed to use BFS and DFS as blackbox algorithms (you do not need to explain how it works if you use it) so long as you detail the inputs and outputs to the algorithms as well as any modifications you make.​
+
+\bigskip
+\medskip
+\noindent
+\textbf{Problem-1 Response:}
+\newline \textbf{Pseudocode:}
+\begin{algorithm}
+ \KwData{V: list of guests (nodes) \newline T: table of guests that each guest knows}
+ \medskip
+ 
+ \bf{Initialization:}\\
+ \begin{verbatim}
+     S = set of all unexplored nodes (starts with all nodes in V);
+     tables = 0;\end{verbatim}
+ \While{S != \emptyset}{
+  v = guest \in S\;\\
+  BFS(v) (run BFS starting from v)\; \\
+  remove all guests found through BFS from v\; \\
+  tables += 1\;
+ }
+ \Return tables
+\end{algorithm}
+
+\noindent \textbf{Efficiency:}
+\begin{quote}
+\begin{verbatim}n: number of nodes in the graph
+m: number of edges in the graph\end{verbatim}
+\medskip
+
+\noindent \textbf{Runtime:} T(n, m) = n * (T(BFS(n, m)))
+\newline Algorithm will run BFS at once per node.\\
+
+\noindent \textbf{Big-O:} O(n + m)
+\newline This algorithm will have the same worst case run-time as BFS (because this algorithm is just repeatedly running BFS until there are no unexplored nodes).
+\end{quote}
+
+\newpage
+\section*{Problem-2 (35 points)}
+% A number of art museums around the country have been featuring work by an artist named Mark Lombardi (1951–2000), consisting of a set of intricately rendered graphs. Building on a great deal of research, these graphs encode the relationships among people involved in major political scandals over the past several decades: the nodes correspond to participants, and each edge indicates some type of relationship between a pair of participants. And so, if you peer closely enough at the drawings, you can trace out ominous looking paths from a high-ranking U.S. government official, to a former business partner, to a bank in Switzerland, to a shadowy arms dealer.
+% Such pictures form striking examples of social networks, which have nodes representing people and organizations, and edges representing relationships of various kinds. And the short paths that abound in these networks have attracted considerable attention recently, as people ponder what they mean. In the case of Mark Lombardi’s graphs, they hint at the short set of steps that can carry you from the reputable to the disreputable. \\ \\
+% \noindent
+% Of course, a single, spurious short path between nodes $v$ and $w$ in such a network may be more coincidental than anything else; a large number of short paths between $v$ and $w$ can be much more convincing. So in addition to the problem of computing a single shortest $v-w$ path in a graph $G$, social networks researchers have looked at the problem of determining the number of shortest $v-w$ paths. \\ \\
+% \noindent
+% You are given an undirected graph, $G = (V, E)$ and two nodes in $G$, $v, w$. Design an algorithm that computes the number of shortest paths between these two nodes in $G$. You can assume that all edge weights are positive. You do not need to identify these paths, but simply find the number of paths. Justify your correctness and running time.  \\
+% \textbf{Note 1:} Please provide a detailed description of your solution in plain English or in pseudocode. \\ \\
+% \textbf{Note 2:} You are also allowed to use BFS and DFS as blackbox algorithms (you do not need to explain how it works if you use it) so long as you detail the inputs and outputs to the algorithms as well as any modifications you make.​
+% \
+
+\noindent \textbf{Problem-2 Response:}\\
+
+1) Run a BFS traversal over all nodes from $v$. Keep track of distances from $v$ during the traversal. Also keep track of parent nodes for each node (nodes that are connected to the current node, and all equally closer to the $v$ node). \\
+
+2) All possible paths can be determined by traversing the parent nodes (tracked from step 1), starting from the $w$ node. This can be done by recursively exploring all the possible paths from $w$ to $v$ along the parent nodes.\\
+
+\noindent \textbf{Justification:}\\
+All the paths found will have the same length, by nature of the parent node tracking method. No node's parents will be any further from $v$. If $d$ is the distance from $v$ to a given node $n$, then all parents of $n$ will have a distance of $d-1$. Therefore, all paths along the parent tree will be equal to the shortest possible distance from $v$ to $w$.
+
+\bigskip
+\noindent \textbf{Runtime:}
+\begin{verbatim}n, m: number of nodes, number of edges\end{verbatim}
+T($n, m$) = $n + 2m$ (same as BFS)
+\newline = O($n + m$)
+
+
+
+​
+\newpage
+\section*{Problem-3 (35 points)}
+\noindent
+There’s a natural intuition that two nodes that are far apart in a communication network—separated by many hops -- have a more tenuous connection than two nodes that are close together. There are a number of algorithmic results that are based to some extent on different ways of making this notion precise. Here’s one that involves the susceptibility of paths to the deletion of nodes. \\ \\ 
+\noindent
+Suppose there exists a communication network $N = (V , E)$ with $n$ nodes (or "hubs"). $N$ contains two hubs $s$ and $t$ such that the distance between s and t is strictly greater than $n/2$. Show that there must exist some hub $v$ ($v \neq s, t$) such that deleting $v$ from the network destroys all $s-t$ circuits (paths). In other words, the communication network obtained by deleting $v$ contains no path from $s$ to $t$. Give a linear time algorithm to find such a hub $v$. Justify the correctness and running time of your algorithm.\\ \\\textbf{Note 1:} Please provide a detailed description of your solution in plain English or in pseudocode. \\ \\
+\textbf{Note 2:} You are also allowed to use BFS and DFS as blackbox algorithms (you do not need to explain how it works if you use it) so long as you detail the inputs and outputs to the algorithms as well as any modifications you make.​
+
+
+
+\end{document}
+\documentclass[11pt]{article}
+\usepackage[margin=0.2in]{geometry}
+\usepackage{amsmath}
+\usepackage[boxed]{algorithm2e}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tikz,graphics,color,fullpage,float,epsf,caption,subcaption}
+
+
+\title{CS3510-A: Design and Analysis of Algorithms, Spring 2021} 
+
+\author{Homework-2}
+
+\begin{document}
+% \maketitle
+\begin{center}
+    
+    \LARGE CS3510-A: Design and Analysis of Algorithms, Spring 2021 \\ \vspace{1em} 
+    \large Homework-2 \\ \vspace{0.5em}
+    January 26, 2021
+\end{center}
+\thispagestyle{empty}
+\pagestyle{empty}
+
+\noindent
+\begin{center}
+{\bf DUE DATE: Tuesday, February 2, 1l:59pm}
+\end{center}
+
+\noindent
+{\bf Note-1:} Your homework solutions should be electronically formatted as a single PDF document that you will upload on Gradescope. 
+If you have to include some handwritten parts, please make sure that they are very clearly written and that you include them as high resolution images. \\
+
+\noindent
+{\bf Note-2:} Please think twice before you copy a solution from another student or resource (book, web site, etc). 
+It is not worth the risk and embarrassment. \\
+
+\noindent
+{\bf Note-3:} You need to {\bf explain/justify} your answers. Do not expect full credit if you just state the correct answer. \\
+
+\noindent
+{\bf Note-4: You will get 2 extra points if you submit electronically typed solutions instead of hand-written.} 
+
+\newpage
+\section*{Problem-1 (30 points)}
+You are planning the seating arrangement for a wedding. You are given the list of guests, $V$, and a lookup-table $T$ where $T[v]$ for $v\in V$ is a list of guests that $v$ knows. If $u$ knows $v$, then $v$ also knows $u$. You are required to arrange the seating such that any guest at a dining table knows every other guest sitting at the same dining table either directly or through some other guests sitting at the same dining table. For example, if $x$ knows $y$ and $y$ knows $z$ and $z$ knows $w$, then $x, y, z, w$ can sit at the same dining table. Describe an efficient algorithm that takes as input the set $V$ and lookup-table $T$ and returns the minimum number of dining tables needed to achieve a valid seating. You can assume a check in the lookup-table is an $O(1)$ operation. \\
+
+\noindent
+\textbf{Note 1:} Please provide a detailed description of your solution in plain English or in pseudocode. Also, explain the time complexity and correctness of the prescribed algorithm.\\ \\
+\textbf{Note 2:} You are also allowed to use BFS and DFS as blackbox algorithms (you do not need to explain how it works if you use it) so long as you detail the inputs and outputs to the algorithms as well as any modifications you make.
+
+\bigskip
+\medskip
+\noindent
+\textbf{Problem-1 Response:}
+\newline \textbf{Pseudocode:}
+\begin{algorithm}
+ \KwData{V: list of guests (nodes) \newline T: table of guests that each guest knows}
+ \medskip
+ 
+ \bf{Initialization:}\\
+ \begin{verbatim}
+     S = set of all unexplored nodes (starts with all nodes in V);
+     tables = 0;\end{verbatim}
+ \While{S != \emptyset}{
+  v = guest \in S\;\\
+  BFS(v) (run BFS starting from v)\; \\
+  remove all guests found through BFS from v\; \\
+  tables += 1\;
+ }
+ \Return tables
+\end{algorithm}
+
+\noindent \textbf{Efficiency:}
+\begin{quote}
+\begin{verbatim}n: number of nodes in the graph
+m: number of edges in the graph\end{verbatim}
+\medskip
+
+\noindent \textbf{Runtime:} T(n, m) = n * (T(BFS(n, m)))
+\newline Algorithm will run BFS at once per node.\\
+
+\noindent \textbf{Big-O:} O(n + m)
+\newline This algorithm will have the same worst case run-time as BFS (because this algorithm is just repeatedly running BFS until there are no unexplored nodes).
+\end{quote}
+
+\newpage
+\section*{Problem-2 (35 points)}
+% A number of art museums around the country have been featuring work by an artist named Mark Lombardi (1951–2000), consisting of a set of intricately rendered graphs. Building on a great deal of research, these graphs encode the relationships among people involved in major political scandals over the past several decades: the nodes correspond to participants, and each edge indicates some type of relationship between a pair of participants. And so, if you peer closely enough at the drawings, you can trace out ominous looking paths from a high-ranking U.S. government official, to a former business partner, to a bank in Switzerland, to a shadowy arms dealer.
+% Such pictures form striking examples of social networks, which have nodes representing people and organizations, and edges representing relationships of various kinds. And the short paths that abound in these networks have attracted considerable attention recently, as people ponder what they mean. In the case of Mark Lombardi’s graphs, they hint at the short set of steps that can carry you from the reputable to the disreputable. \\ \\
+% \noindent
+% Of course, a single, spurious short path between nodes $v$ and $w$ in such a network may be more coincidental than anything else; a large number of short paths between $v$ and $w$ can be much more convincing. So in addition to the problem of computing a single shortest $v-w$ path in a graph $G$, social networks researchers have looked at the problem of determining the number of shortest $v-w$ paths. \\ \\
+% \noindent
+% You are given an undirected graph, $G = (V, E)$ and two nodes in $G$, $v, w$. Design an algorithm that computes the number of shortest paths between these two nodes in $G$. You can assume that all edge weights are positive. You do not need to identify these paths, but simply find the number of paths. Justify your correctness and running time.  \\
+% \textbf{Note 1:} Please provide a detailed description of your solution in plain English or in pseudocode. \\ \\
+% \textbf{Note 2:} You are also allowed to use BFS and DFS as blackbox algorithms (you do not need to explain how it works if you use it) so long as you detail the inputs and outputs to the algorithms as well as any modifications you make.​
+% \
+
+\noindent \textbf{Problem-2 Response:}\\
+
+1) Run a BFS traversal over all nodes from $v$. Keep track of distances from $v$ during the traversal. Also keep track of parent nodes for each node (nodes that are connected to the current node, and all equally closer to the $v$ node). \\
+
+2) All possible paths can be determined by traversing the parent nodes (tracked from step 1), starting from the $w$ node. This can be done by recursively exploring all the possible paths from $w$ to $v$ along the parent nodes.\\
+
+\noindent \textbf{Justification:}\\
+All the paths found will have the same length, by nature of the parent node tracking method. No node's parents will be any further from $v$. If $d$ is the distance from $v$ to a given node $n$, then all parents of $n$ will have a distance of $d-1$. Therefore, all paths along the parent tree will be equal to the shortest possible distance from $v$ to $w$.
+
+\bigskip
+\noindent \textbf{Runtime:}
+\begin{verbatim}n, m: number of nodes, number of edges\end{verbatim}
+T($n, m$) = $n + 2m$ (same as BFS)
+\newline = O($n + m$)
+
+
+
+\newpage
+\section*{Problem-3 (35 points)}
+\noindent
+There’s a natural intuition that two nodes that are far apart in a communication network—separated by many hops -- have a more tenuous connection than two nodes that are close together. There are a number of algorithmic results that are based to some extent on different ways of making this notion precise. Here’s one that involves the susceptibility of paths to the deletion of nodes. \\ \\ 
+\noindent
+Suppose there exists a communication network $N = (V , E)$ with $n$ nodes (or "hubs"). $N$ contains two hubs $s$ and $t$ such that the distance between s and t is strictly greater than $n/2$. Show that there must exist some hub $v$ ($v \neq s, t$) such that deleting $v$ from the network destroys all $s-t$ circuits (paths). In other words, the communication network obtained by deleting $v$ contains no path from $s$ to $t$. Give a linear time algorithm to find such a hub $v$. Justify the correctness and running time of your algorithm.\\ \\\textbf{Note 1:} Please provide a detailed description of your solution in plain English or in pseudocode. \\ \\
+\textbf{Note 2:} You are also allowed to use BFS and DFS as blackbox algorithms (you do not need to explain how it works if you use it) so long as you detail the inputs and outputs to the algorithms as well as any modifications you make.
+
+
+
+\end{document}
+\documentclass[11pt]{article}
+\usepackage[margin=0.2in]{geometry}
+\usepackage{amsmath}
+\usepackage[boxed]{algorithm2e}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tikz,graphics,color,fullpage,float,epsf,caption,subcaption}
+
+
+\title{CS3510-A: Design and Analysis of Algorithms, Spring 2021} 
+
+\author{Homework-2}
+
+\begin{document}
+% \maketitle
+\begin{center}
+    
+    \LARGE CS3510-A: Design and Analysis of Algorithms, Spring 2021 \\ \vspace{1em} 
+    \large Homework-2 \\ \vspace{0.5em}
+    January 26, 2021
+\end{center}
+\thispagestyle{empty}
+\pagestyle{empty}
+
+\noindent
+\begin{center}
+{\bf DUE DATE: Tuesday, February 2, 1l:59pm}
+\end{center}
+
+\noindent
+{\bf Note-1:} Your homework solutions should be electronically formatted as a single PDF document that you will upload on Gradescope. 
+If you have to include some handwritten parts, please make sure that they are very clearly written and that you include them as high resolution images. \\
+
+\noindent
+{\bf Note-2:} Please think twice before you copy a solution from another student or resource (book, web site, etc). 
+It is not worth the risk and embarrassment. \\
+
+\noindent
+{\bf Note-3:} You need to {\bf explain/justify} your answers. Do not expect full credit if you just state the correct answer. \\
+
+\noindent
+{\bf Note-4: You will get 2 extra points if you submit electronically typed solutions instead of hand-written.} 
+
+\newpage
+\section*{Problem-1 (30 points)}
+You are planning the seating arrangement for a wedding. You are given the list of guests, $V$, and a lookup-table $T$ where $T[v]$ for $v\in V$ is a list of guests that $v$ knows. If $u$ knows $v$, then $v$ also knows $u$. You are required to arrange the seating such that any guest at a dining table knows every other guest sitting at the same dining table either directly or through some other guests sitting at the same dining table. For example, if $x$ knows $y$ and $y$ knows $z$ and $z$ knows $w$, then $x, y, z, w$ can sit at the same dining table. Describe an efficient algorithm that takes as input the set $V$ and lookup-table $T$ and returns the minimum number of dining tables needed to achieve a valid seating. You can assume a check in the lookup-table is an $O(1)$ operation. \\
+
+\noindent
+\textbf{Note 1:} Please provide a detailed description of your solution in plain English or in pseudocode. Also, explain the time complexity and correctness of the prescribed algorithm.\\ \\
+\textbf{Note 2:} You are also allowed to use BFS and DFS as blackbox algorithms (you do not need to explain how it works if you use it) so long as you detail the inputs and outputs to the algorithms as well as any modifications you make.
+
+\bigskip
+\medskip
+\noindent
+\textbf{Problem-1 Response:}
+\newline \textbf{Pseudocode:}
+\begin{algorithm}
+ \KwData{V: list of guests (nodes) \newline T: table of guests that each guest knows}
+ \medskip
+ 
+ \bf{Initialization:}\\
+ \begin{verbatim}
+     S = set of all unexplored nodes (starts with all nodes in V);
+     tables = 0;\end{verbatim}
+ \While{S != \emptyset}{
+  v = guest \in S\;\\
+  BFS(v) (run BFS starting from v)\; \\
+  remove all guests found through BFS from v\; \\
+  tables += 1\;
+ }
+ \Return tables
+\end{algorithm}
+
+\noindent \textbf{Efficiency:}
+\begin{quote}
+\begin{verbatim}n: number of nodes in the graph
+m: number of edges in the graph\end{verbatim}
+\medskip
+
+\noindent \textbf{Runtime:} T(n, m) = n * (T(BFS(n, m)))
+\newline Algorithm will run BFS at once per node.\\
+
+\noindent \textbf{Big-O:} O(n + m)
+\newline This algorithm will have the same worst case run-time as BFS (because this algorithm is just repeatedly running BFS until there are no unexplored nodes).
+\end{quote}
+
+\newpage
+\section*{Problem-2 (35 points)}
+% A number of art museums around the country have been featuring work by an artist named Mark Lombardi (1951–2000), consisting of a set of intricately rendered graphs. Building on a great deal of research, these graphs encode the relationships among people involved in major political scandals over the past several decades: the nodes correspond to participants, and each edge indicates some type of relationship between a pair of participants. And so, if you peer closely enough at the drawings, you can trace out ominous looking paths from a high-ranking U.S. government official, to a former business partner, to a bank in Switzerland, to a shadowy arms dealer.
+% Such pictures form striking examples of social networks, which have nodes representing people and organizations, and edges representing relationships of various kinds. And the short paths that abound in these networks have attracted considerable attention recently, as people ponder what they mean. In the case of Mark Lombardi’s graphs, they hint at the short set of steps that can carry you from the reputable to the disreputable. \\ \\
+% \noindent
+% Of course, a single, spurious short path between nodes $v$ and $w$ in such a network may be more coincidental than anything else; a large number of short paths between $v$ and $w$ can be much more convincing. So in addition to the problem of computing a single shortest $v-w$ path in a graph $G$, social networks researchers have looked at the problem of determining the number of shortest $v-w$ paths. \\ \\
+% \noindent
+% You are given an undirected graph, $G = (V, E)$ and two nodes in $G$, $v, w$. Design an algorithm that computes the number of shortest paths between these two nodes in $G$. You can assume that all edge weights are positive. You do not need to identify these paths, but simply find the number of paths. Justify your correctness and running time.  \\
+% \textbf{Note 1:} Please provide a detailed description of your solution in plain English or in pseudocode. \\ \\
+% \textbf{Note 2:} You are also allowed to use BFS and DFS as blackbox algorithms (you do not need to explain how it works if you use it) so long as you detail the inputs and outputs to the algorithms as well as any modifications you make.​
+% \
+
+\noindent \textbf{Problem-2 Response:}\\
+
+1) Run a BFS traversal over all nodes from $v$. Keep track of distances from $v$ during the traversal. Also keep track of parent nodes for each node (nodes that are connected to the current node, and all equally closer to the $v$ node). \\
+
+2) All possible paths can be determined by traversing the parent nodes (tracked from step 1), starting from the $w$ node. This can be done by recursively exploring all the possible paths from $w$ to $v$ along the parent nodes.\\
+
+\noindent \textbf{Justification:}\\
+All the paths found will have the same length, by nature of the parent node tracking method. No node's parents will be any further from $v$. If $d$ is the distance from $v$ to a given node $n$, then all parents of $n$ will have a distance of $d-1$. Therefore, all paths along the parent tree will be equal to the shortest possible distance from $v$ to $w$.
+
+\bigskip
+\noindent \textbf{Runtime:}
+\begin{verbatim}n, m: number of nodes, number of edges\end{verbatim}
+T($n, m$) = $n + 2m$ (same as BFS)
+\newline = O($n + m$)
+
+
+
+\newpage
+\section*{Problem-3 (35 points)}
+\noindent
+There’s a natural intuition that two nodes that are far apart in a communication network—separated by many hops -- have a more tenuous connection than two nodes that are close together. There are a number of algorithmic results that are based to some extent on different ways of making this notion precise. Here’s one that involves the susceptibility of paths to the deletion of nodes. \\ \\ 
+\noindent
+Suppose there exists a communication network $N = (V , E)$ with $n$ nodes (or "hubs"). $N$ contains two hubs $s$ and $t$ such that the distance between s and t is strictly greater than $n/2$. Show that there must exist some hub $v$ ($v \neq s, t$) such that deleting $v$ from the network destroys all $s-t$ circuits (paths). In other words, the communication network obtained by deleting $v$ contains no path from $s$ to $t$. Give a linear time algorithm to find such a hub $v$. Justify the correctness and running time of your algorithm.\\ \\\textbf{Note 1:} Please provide a detailed description of your solution in plain English or in pseudocode. \\ \\
+\textbf{Note 2:} You are also allowed to use BFS and DFS as blackbox algorithms (you do not need to explain how it works if you use it) so long as you detail the inputs and outputs to the algorithms as well as any modifications you make.
+
+
+
+\end{document}
