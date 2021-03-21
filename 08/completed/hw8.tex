@@ -7,7 +7,9 @@
 \usepackage{mathtools}
 \usepackage{tikz,graphics,color,fullpage,float,epsf,caption,subcaption}
 \DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
-\usepackage[]{algorithm2e}
+% \usepackage[]{algorithm2e}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 
 \newcommand{\ggets}{\gets}
 
@@ -50,7 +52,14 @@ It is not worth the risk and embarrassment. \\
 
 Using Huffman encoding of n symbols with frequencies $f_1, f_2, ... f_n$, what is the length of the longest possible code-word? Additionally, what values of $f_1, f_2, ... f_n$ lead to this length? Please justify why these values of $f_i$ lead to the maximum possible length code-word.
 
+\subsection*{Solution:}
+The longest possible code word will be $n-1$.\\
+The values of $f_1 .. f_n$ should be $f_x \gets \frac{1}{2^x}$.
 
+\subsection*{Explanation:}
+The Huffman algorithm for building an encoding tree makes a new merged node with the two nodes that have the lowest proabibilities.
+By having probabilities that are each half of the next highest probability, the algorithm will merge each node with a subnode that includes all nodes with lower probabilities.
+This will result in a tree that is the maximum possible depth and therefore have the longest possible code-word.
 
 \newpage
 \section*{Problem-2 (35 points)}
@@ -87,7 +96,38 @@ Describe a \textbf{polynomial-time algorithm} that produces an assignment of job
 \begin{itemize}
     \item Algorithm and runtime: Briefly describe how you will assign tasks to machines -- and explain why your algorithm can run in poly-time. (This part can be done with 1-2 sentences only!)
     \item Proof of Upper Bound: Show why your greedy solution can have a makespan that is at most 3 times the optimal solution's makespan.
-    
 \end{itemize}
+
+\subsection*{Solution:}
+\begin{algorithm}
+    \caption{Sorted-Balance for Heterogeneous setting}
+    \begin{algorithmic}[1]
+        \STATE Start with no jobs assigned
+        \STATE $T_i = 0$ and $A(i)=\emptyset$ for all machines $M_i$
+        \STATE Sort jobs in decreasing order of processing times $t_j$
+        \STATE Assume that $t_1 \geq t_2 \geq ... \geq t_n$
+
+        \FOR{$j = 1, ..., n$}
+            \STATE $M_i \gets $ machine with the minimum $min_k T_k$
+            \STATE Assign job to $M_i$
+            \STATE Set $A(i) \gets A(i) \cup {j}$
+            \IF{$M_i$ is a fast machine}
+                \STATE Set $T_i \gets T_i + \frac{j}{2}$
+            \ELSE
+                \STATE Set $T_i \gets T_i + j$
+            \ENDIF
+        \ENDFOR
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection*{Explanation:}
+This algorithm is the same as the one from section 11.1 of the book.
+However this algorithm accounts for faster machines being able to process double the amount of work
+by adding half of the job load to the appropriate $T$ when a fast machine is chosen.
+
+\subsection*{Runtime:}
+
+\subsection*{Proof of Upper Bound:}
+
 
 \end{document}
