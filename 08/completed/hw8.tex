@@ -85,6 +85,23 @@ Please provide your answer in four sections:
     \item Run-Time Analysis: Explain why your algorithm is polynomial time.
 \end{enumerate}
 
+\newpage
+\subsection*{Solution:}
+\subsection*{Dynamic Programming Table:}
+The table for the solution of this problem will be one dimensional.
+The table will essentially be an array with the optimal cost at each week for the given input data.
+
+\subsection*{Recurrence Equation:}
+For a week $i$ the optimal cost for that week can be calculated with: $min(rw_i + OPT_{i-1}, 4c + OPT_{i-4})$.
+With a base case of $OPT_0 = 0$.
+
+\subsection*{Pseudo-code:}
+\includegraphics[scale=0.5]{two_code.png}
+
+\subsection*{Run-Time:}
+This algorithm will do $O(1)$ work for each of the $n$ weeks given.
+Therefore, the overall runtime is $O(n)$.
+
 
 \newpage
 \section*{Problem-3 (35 points)}
@@ -98,6 +115,7 @@ Describe a \textbf{polynomial-time algorithm} that produces an assignment of job
     \item Proof of Upper Bound: Show why your greedy solution can have a makespan that is at most 3 times the optimal solution's makespan.
 \end{itemize}
 
+\newpage
 \subsection*{Solution:}
 \begin{algorithm}
     \caption{Sorted-Balance for Heterogeneous setting}
@@ -108,13 +126,20 @@ Describe a \textbf{polynomial-time algorithm} that produces an assignment of job
         \STATE Assume that $t_1 \geq t_2 \geq ... \geq t_n$
 
         \FOR{$j = 1, ..., n$}
-            \STATE $M_i \gets $ machine with the minimum $min_k T_k$
+            \STATE $F_i \gets $ fast machine with the minimum $min_k T_k$
+            \STATE $S_i \gets $ slow machine with the minimum $min_k T_k$
+            \IF{$T_S + t_j > T_F + \frac{t_j}{2}$}
+                \STATE $M_i \gets F_i$
+            \ELSE
+                \STATE $M_i \gets S_i$
+            \ENDIF
+
             \STATE Assign job to $M_i$
             \STATE Set $A(i) \gets A(i) \cup {j}$
             \IF{$M_i$ is a fast machine}
-                \STATE Set $T_i \gets T_i + \frac{j}{2}$
+                \STATE Set $T_i \gets T_i + \frac{t_j}{2}$
             \ELSE
-                \STATE Set $T_i \gets T_i + j$
+                \STATE Set $T_i \gets T_i + t_j$
             \ENDIF
         \ENDFOR
     \end{algorithmic}
@@ -126,8 +151,25 @@ However this algorithm accounts for faster machines being able to process double
 by adding half of the job load to the appropriate $T$ when a fast machine is chosen.
 
 \subsection*{Runtime:}
+\begin{itemize}
+\itemsep0em
+\item Sorting the jobs in decreasing order can be done in $O(nlogn)$
+\item For $n$ jobs:\\
+    \begin{itemize}
+        \itemsep0em 
+        \vspace{-0.6cm} \item The machine with minimum job load can be found and removed with a Fibonnaci heap in $O(logm)$ or $O(logk)$
+        \item The machine job load is then updated with the current job added as a new point in a Fibonnaci heap in $O(1)$.
+    \end{itemize}
+\end{itemize}
+These runtimes reduce down to $O(n)$ which is polynomial time.
 
 \subsection*{Proof of Upper Bound:}
+Where $t_j$ is the load of the largest job.
+If the largest job were placed on the fastest machine, then $t_j \leq 2T^*$ (where $T^*$ is the makespan of the optimal solution).\\
+Where $T_i$ is the makespan of the machine that has recieved job $j$, $T_i - t_j \leq T^*$
+(the load on the machine before it recieves job $j$ will be less than the optimal makespan).\\
+This can be rewritten as: $T_i - 2T^* \leq T^*$. And then reduced to: $T_i \leq 3T^*$.\\
+Thus, the makespan of this greedy solution is at most 3 times the optimal solution's makespan.
 
 
 \end{document}
